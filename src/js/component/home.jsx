@@ -1,24 +1,44 @@
 import React from "react";
+import { useState, useEffect } from "react";
+import Clock from "./Counter";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
+
 
 //create your first component
 const Home = () => {
+
+	const [seconds, setSeconds] = useState(0)
+	const [minutes, setMinutes] = useState(0)
+	const [hours, setHours] = useState(0)
+
+
+	useEffect(() => {
+		const intervalTime = setInterval(() => {
+			setSeconds(prevSeconds => (prevSeconds + 1) % 60);
+			if (seconds === 59) {
+				setMinutes(prevMinutes => (prevMinutes + 1) % 60);
+			}
+		}, 1000);
+
+		return () => clearInterval(intervalTime);
+	}, []);
+
+	useEffect(() => {
+		if (seconds === 59) {
+			setMinutes(prevMinutes => (prevMinutes + 1) % 60);
+		}
+	}, [seconds]);
+
+	useEffect(() => {
+		if (minutes === 59) {
+			setHours(prevHours => prevHours + 1);
+		}
+	}, [minutes]);
+
+
 	return (
-		<div className="text-center">
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
+		<div className="text-center main-container">
+			<Clock />
 		</div>
 	);
 };
